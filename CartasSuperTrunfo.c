@@ -1,11 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 
 #define ESTADOS 8
 #define CIDADES 4
 
 typedef struct {
     char codigo[4];
-    int populacao;
+    unsigned long int populacao;
     float area;
     float pib;
     int pontos_turisticos;
@@ -15,7 +16,7 @@ typedef struct {
 
 void calcularPropriedades(Cidade *cidade) {
     cidade->densidade = cidade->populacao / cidade->area;
-    cidade->super_poder = cidade->populacao + cidade->area + cidade->pib + cidade->pontos_turisticos;
+    cidade->super_poder = cidade->populacao + cidade->area + cidade->pib + cidade->pontos_turisticos + (1.0 / cidade->densidade);
 }
 
 void cadastrarCartas(Cidade cidades[ESTADOS][CIDADES]) {
@@ -26,7 +27,7 @@ void cadastrarCartas(Cidade cidades[ESTADOS][CIDADES]) {
             sprintf(cidades[i][j].codigo, "%c%02d", estados[i], j + 1);
             printf("Cadastro da cidade %s:\n", cidades[i][j].codigo);
             printf("Populacao: ");
-            scanf("%d", &cidades[i][j].populacao);
+            scanf("%lu", &cidades[i][j].populacao);
             printf("Area (km^2): ");
             scanf("%f", &cidades[i][j].area);
             printf("PIB (em bilhões): ");
@@ -44,7 +45,7 @@ void exibirCartas(Cidade cidades[ESTADOS][CIDADES]) {
     for (int i = 0; i < ESTADOS; i++) {
         for (int j = 0; j < CIDADES; j++) {
             printf("Código: %s\n", cidades[i][j].codigo);
-            printf("População: %d\n", cidades[i][j].populacao);
+            printf("População: %lu\n", cidades[i][j].populacao);
             printf("Área: %.2f km^2\n", cidades[i][j].area);
             printf("PIB: %.2f bilhões\n", cidades[i][j].pib);
             printf("Pontos turísticos: %d\n", cidades[i][j].pontos_turisticos);
@@ -57,11 +58,11 @@ void exibirCartas(Cidade cidades[ESTADOS][CIDADES]) {
 
 void compararCartas(Cidade c1, Cidade c2) {
     printf("\nComparação entre %s e %s:\n", c1.codigo, c2.codigo);
-    printf("Densidade populacional: %s vence\n", (c1.densidade < c2.densidade) ? c1.codigo : c2.codigo);
-    printf("Área: %s vence\n", (c1.area > c2.area) ? c1.codigo : c2.codigo);
-    printf("PIB: %s vence\n", (c1.pib > c2.pib) ? c1.codigo : c2.codigo);
-    printf("Pontos turísticos: %s vence\n", (c1.pontos_turisticos > c2.pontos_turisticos) ? c1.codigo : c2.codigo);
-    printf("Super Poder: %s vence\n", (c1.super_poder > c2.super_poder) ? c1.codigo : c2.codigo);
+    printf("Densidade populacional: %d\n", (c1.densidade < c2.densidade) ? 1 : 0);
+    printf("Área: %d\n", (c1.area > c2.area) ? 1 : 0);
+    printf("PIB: %d\n", (c1.pib > c2.pib) ? 1 : 0);
+    printf("Pontos turísticos: %d\n", (c1.pontos_turisticos > c2.pontos_turisticos) ? 1 : 0);
+    printf("Super Poder: %d\n", (c1.super_poder > c2.super_poder) ? 1 : 0);
 }
 
 int main() {
