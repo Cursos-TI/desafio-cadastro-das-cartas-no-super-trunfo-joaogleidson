@@ -1,22 +1,93 @@
 #include <stdio.h>
 
-// Desafio Super Trunfo - Países
-// Tema 1 - Cadastro das Cartas
-// Este código inicial serve como base para o desenvolvimento do sistema de cadastro de cartas de cidades.
-// Siga os comentários para implementar cada parte do desafio.
-//Teste larissa
+#define ESTADOS 8
+#define CIDADES 4
+
+typedef struct {
+    char codigo[4];
+    int populacao;
+    float area;
+    float pib;
+    int pontos_turisticos;
+    float densidade;
+    float super_poder;
+} Cidade;
+
+void calcularPropriedades(Cidade *cidade) {
+    cidade->densidade = cidade->populacao / cidade->area;
+    cidade->super_poder = cidade->populacao + cidade->area + cidade->pib + cidade->pontos_turisticos;
+}
+
+void cadastrarCartas(Cidade cidades[ESTADOS][CIDADES]) {
+    char estados[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+    
+    for (int i = 0; i < ESTADOS; i++) {
+        for (int j = 0; j < CIDADES; j++) {
+            sprintf(cidades[i][j].codigo, "%c%02d", estados[i], j + 1);
+            printf("Cadastro da cidade %s:\n", cidades[i][j].codigo);
+            printf("Populacao: ");
+            scanf("%d", &cidades[i][j].populacao);
+            printf("Area (km^2): ");
+            scanf("%f", &cidades[i][j].area);
+            printf("PIB (em bilhões): ");
+            scanf("%f", &cidades[i][j].pib);
+            printf("Número de pontos turísticos: ");
+            scanf("%d", &cidades[i][j].pontos_turisticos);
+            calcularPropriedades(&cidades[i][j]);
+            printf("\n");
+        }
+    }
+}
+
+void exibirCartas(Cidade cidades[ESTADOS][CIDADES]) {
+    printf("\n=== Cartas Cadastradas ===\n");
+    for (int i = 0; i < ESTADOS; i++) {
+        for (int j = 0; j < CIDADES; j++) {
+            printf("Código: %s\n", cidades[i][j].codigo);
+            printf("População: %d\n", cidades[i][j].populacao);
+            printf("Área: %.2f km^2\n", cidades[i][j].area);
+            printf("PIB: %.2f bilhões\n", cidades[i][j].pib);
+            printf("Pontos turísticos: %d\n", cidades[i][j].pontos_turisticos);
+            printf("Densidade populacional: %.2f hab/km^2\n", cidades[i][j].densidade);
+            printf("Super Poder: %.2f\n", cidades[i][j].super_poder);
+            printf("----------------------\n");
+        }
+    }
+}
+
+void compararCartas(Cidade c1, Cidade c2) {
+    printf("\nComparação entre %s e %s:\n", c1.codigo, c2.codigo);
+    printf("Densidade populacional: %s vence\n", (c1.densidade < c2.densidade) ? c1.codigo : c2.codigo);
+    printf("Área: %s vence\n", (c1.area > c2.area) ? c1.codigo : c2.codigo);
+    printf("PIB: %s vence\n", (c1.pib > c2.pib) ? c1.codigo : c2.codigo);
+    printf("Pontos turísticos: %s vence\n", (c1.pontos_turisticos > c2.pontos_turisticos) ? c1.codigo : c2.codigo);
+    printf("Super Poder: %s vence\n", (c1.super_poder > c2.super_poder) ? c1.codigo : c2.codigo);
+}
 
 int main() {
-    // Sugestão: Defina variáveis separadas para cada atributo da cidade.
-    // Exemplos de atributos: código da cidade, nome, população, área, PIB, número de pontos turísticos.
+    Cidade cidades[ESTADOS][CIDADES];
+    cadastrarCartas(cidades);
+    exibirCartas(cidades);
     
-    // Cadastro das Cartas:
-    // Sugestão: Utilize a função scanf para capturar as entradas do usuário para cada atributo.
-    // Solicite ao usuário que insira as informações de cada cidade, como o código, nome, população, área, etc.
+    char codigo1[4], codigo2[4];
+    printf("\nDigite o código da primeira carta para comparação: ");
+    scanf("%s", codigo1);
+    printf("Digite o código da segunda carta para comparação: ");
+    scanf("%s", codigo2);
     
-    // Exibição dos Dados das Cartas:
-    // Sugestão: Utilize a função printf para exibir as informações das cartas cadastradas de forma clara e organizada.
-    // Exiba os valores inseridos para cada atributo da cidade, um por linha.
-
+    Cidade *c1 = NULL, *c2 = NULL;
+    for (int i = 0; i < ESTADOS; i++) {
+        for (int j = 0; j < CIDADES; j++) {
+            if (strcmp(cidades[i][j].codigo, codigo1) == 0) c1 = &cidades[i][j];
+            if (strcmp(cidades[i][j].codigo, codigo2) == 0) c2 = &cidades[i][j];
+        }
+    }
+    
+    if (c1 && c2) {
+        compararCartas(*c1, *c2);
+    } else {
+        printf("Uma ou ambas as cartas não foram encontradas.\n");
+    }
+    
     return 0;
 }
